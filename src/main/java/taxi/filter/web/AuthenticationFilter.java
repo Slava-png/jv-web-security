@@ -1,0 +1,32 @@
+package taxi.filter.web;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+public class AuthenticationFilter implements Filter {
+    private Set<String> allowedUrls = new HashSet<>();
+
+    {
+        allowedUrls.add("/login");
+        allowedUrls.add("/drivers/add");
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
+        HttpServletResponse resp = (HttpServletResponse) servletResponse;
+        HttpSession session = req.getSession();
+        Long driverId = (Long) session.getAttribute("id");
+        if (allowedUrls.contains(req.getServletPath()) || driverId != null) {
+            chain.doFilter(req, resp);
+            return;
+        }
+        resp.sendRedirect(req.getContextPath() + "/login");
+    }
+}
