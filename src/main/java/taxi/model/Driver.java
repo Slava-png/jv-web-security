@@ -9,7 +9,8 @@ public class Driver {
     private String login;
     private String password;
 
-    public Driver() {}
+    public Driver() {
+    }
 
     public Driver(String name, String licenseNumber, String login, String password) {
         this.name = name;
